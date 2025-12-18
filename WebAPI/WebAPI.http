@@ -1,0 +1,13 @@
+@WebAPI_HostAddress = http://localhost:5052
+
+POST {{WebAPI_HostAddress}}/api/compiler/addSub
+Accept: application/json
+Content-Type: application/json
+{
+  "sourceCode": "#include <stdio.h>\n\nint main() {\n    int n, i;\n    unsigned long long fact = 1;\n    scanf(\"%d\", &n);\n    for (i = 1; i <= n; i++)\n        fact *= i;\n    printf(\"%llu\\n\", fact);\n    return 0;\n}",
+  "input": "5"
+}
+
+
+
+###

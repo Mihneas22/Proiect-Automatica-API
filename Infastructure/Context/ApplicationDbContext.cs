@@ -1,0 +1,25 @@
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Infastructure.Context
+{
+    public class ApplicationDbContext: DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.UserSubmissions)
+                .WithOne(s => s.User)
+                .HasForeignKey(s => s.UserId);
+        }
+
+        public DbSet<User>? UserEntity { get; set; }
+        public DbSet<Submission>? SubmissionEntity { get; set; }
+    }
+}
