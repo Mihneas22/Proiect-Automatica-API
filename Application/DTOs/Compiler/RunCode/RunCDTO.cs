@@ -12,5 +12,11 @@ namespace Application.DTOs.Compiler.RunCode
 
         [Required]
         public string Input { get; set; } = string.Empty;
+
+        [Required]
+        public Guid UserId { get; set; } = Guid.Empty;
+
+        [Required]
+        public Guid ProblemId { get; set; } = Guid.Empty;
     }
 }
