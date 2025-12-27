@@ -17,9 +17,15 @@ namespace Infastructure.Context
                 .HasMany(u => u.UserSubmissions)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId);
+
+            modelBuilder.Entity<Problem>()
+                .HasMany(sub => sub.ProblemSubmissions)
+                .WithOne(sub => sub.Problem)
+                .HasForeignKey(sub => sub.ProblemId);
         }
 
         public DbSet<User>? UserEntity { get; set; }
         public DbSet<Submission>? SubmissionEntity { get; set; }
+        public DbSet<Problem>? ProblemEntity { get; set; }
     }
 }

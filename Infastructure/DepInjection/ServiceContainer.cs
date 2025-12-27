@@ -1,7 +1,9 @@
 ﻿using Application.Repository;
 using Infastructure.Context;
 using Infastructure.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,7 +21,7 @@ namespace Infastructure.DepInjection
                 b => b.MigrationsAssembly(typeof(ServiceContainer).Assembly.FullName)),
                 ServiceLifetime.Scoped);
 
-            /*services.AddAuthentication(options =>
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,10 +38,11 @@ namespace Infastructure.DepInjection
                     IssuerSigningKey = new SymmetricSecurityKey
                         (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
                 };
-            });*/
+            });
 
             services.AddScoped<ICompiler, CompilerRepository>();
             services.AddScoped<IUser, UserRepository>();
+            services.AddScoped<IProblem, ProblemRepository>();
 
             return services;
         }

@@ -4,6 +4,7 @@ using Infastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251227100843_db2")]
+    partial class db2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,10 @@ namespace Infastructure.Migrations
                     b.PrimitiveCollection<string>("Tags")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TestsJson")
+                    b.Property<string>("Test1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Test2")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProblemId");

@@ -1,12 +1,22 @@
-@WebAPI_HostAddress = http://localhost:5052
+﻿@WebAPI_HostAddress = http://localhost:5052
 
-POST {{WebAPI_HostAddress}}/api/compiler/addSub
+POST {{WebAPI_HostAddress}}/api/problem/addProblem
 Accept: application/json
 Content-Type: application/json
 {
-  "sourceCode": "#include <stdio.h>\n\nint main() {\n    int n, i;\n    unsigned long long fact = 1;\n    scanf(\"%d\", &n);\n    for (i = 1; i <= n; i++)\n        fact *= i;\n    printf(\"%llu\\n\", fact);\n    return 0;\n}",
-  "input": "5"
+   "Name": "Fibonacci",
+    "Lab": "Recursivitate",
+    "Tags": ["recursion", "sequence", "math"],
+    "Content": "Scrie o funcție care returnează al n-lea element din șirul Fibonacci.",
+    "Requests": ["Citește un număr n", "Calculează al n-lea Fibonacci", "Afișează rezultatul"],
+    "Points": 20,
+    "TestsJson": "[{\"Input\":\"0\",\"Output\":\"0\"},{\"Input\":\"1\",\"Output\":\"1\"},{\"Input\":\"5\",\"Output\":\"5\"},{\"Input\":\"10\",\"Output\":\"55\"}]"
 }
+
+
+
+
+
 
 
 
