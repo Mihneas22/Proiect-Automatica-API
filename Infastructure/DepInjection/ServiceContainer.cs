@@ -39,6 +39,7 @@ namespace Infastructure.DepInjection
             });*/
 
             services.AddScoped<ICompiler, CompilerRepository>();
+            services.AddScoped<IUser, UserRepository>();
 
             return services;
         }
