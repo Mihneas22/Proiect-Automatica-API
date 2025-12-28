@@ -1,4 +1,5 @@
-﻿using Application.DTOs.User.LoginUser;
+﻿using Application.DTOs.User.GetUser;
+using Application.DTOs.User.LoginUser;
 using Application.DTOs.User.RegisterUser;
 using Application.Repository;
 using Domain.Entities;
@@ -88,6 +89,18 @@ namespace Infastructure.Repository
             await dbContext.SaveChangesAsync();
 
             return new RegisterUserResponse(true, "Success!");
+        }
+
+        public async Task<GetUserResponse> GetUserRepository(GetUserDTO getUserDTO)
+        {
+            if (getUserDTO == null)
+                return new GetUserResponse(false, "Invalid data");
+
+            var user = await dbContext.UserEntity!.FirstOrDefaultAsync(us => us.Email == getUserDTO.Email && us.Username == getUserDTO.Username);
+            if(user == null)
+                return new GetUserResponse(false, "Invalid data");
+            else
+                return new GetUserResponse(true, "User found!",user);
         }
     }
 }

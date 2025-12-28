@@ -1,5 +1,8 @@
-﻿using Application.DTOs.Compiler.RunCode;
+﻿using Application.DTOs.Compiler.AddSubmission;
+using Application.DTOs.Compiler.RunCode;
 using Application.Repository;
+using Infastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +12,22 @@ namespace Infastructure.Repository
 {
     public class CompilerRepository : ICompiler
     {
+        private readonly ApplicationDbContext dbContext;
+
+        public CompilerRepository(ApplicationDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
+        public async Task<AddSubmissionResponse> AddSubmissionRepository(AddSubmissionDTO addSubDTO)
+        {
+            if (addSubDTO == null)
+                return new AddSubmissionResponse(false, "Invalid data");
+
+            return new AddSubmissionResponse(false, "Invalid data");
+
+        }
+
         public async Task<RunCResponse> CompileAndRunCode(RunCDTO runCDTO)
         {
             var submissionId = Guid.NewGuid();
@@ -69,8 +88,8 @@ namespace Infastructure.Repository
             }
 
             var output = File.ReadAllText($"{workDir}/output.txt");
-
             Directory.Delete(workDir, recursive: true);
+
             return new RunCResponse(true, $"{output.ToString()}");
         }
     }

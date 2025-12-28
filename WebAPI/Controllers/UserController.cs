@@ -1,4 +1,5 @@
-﻿using Application.DTOs.User.LoginUser;
+﻿using Application.DTOs.User.GetUser;
+using Application.DTOs.User.LoginUser;
 using Application.DTOs.User.RegisterUser;
 using Application.Repository;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +29,13 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<LoginUserResponse>> LoginUserAsync(LoginUserDTO loginUserDTO)
         {
             var result = await userRepo.LoginUserRepository(loginUserDTO);
+            return Ok(result);
+        }
+
+        [HttpPost("getUser")]
+        public async Task<ActionResult<GetUserResponse>> GetUserAsync(GetUserDTO getUserDTO)
+        {
+            var result = await userRepo.GetUserRepository(getUserDTO);
             return Ok(result);
         }
     }

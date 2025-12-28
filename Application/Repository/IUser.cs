@@ -1,4 +1,5 @@
-﻿using Application.DTOs.User.LoginUser;
+﻿using Application.DTOs.User.GetUser;
+using Application.DTOs.User.LoginUser;
 using Application.DTOs.User.RegisterUser;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,7 @@ namespace Application.Repository
         Task<RegisterUserResponse> RegisterUserRepository(RegisterUserDTO registerUserDTO);
 
         Task<LoginUserResponse> LoginUserRepository(LoginUserDTO loginUserDTO);
+
+        Task<GetUserResponse> GetUserRepository(GetUserDTO getUserDTO);
     }
 }
