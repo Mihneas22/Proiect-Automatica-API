@@ -21,7 +21,13 @@ namespace Infastructure.Repository
             File.Copy(runScriptSource, runScriptDest, true);
 
 
-            File.WriteAllText(Path.Combine(workDir, "main.c"), runCDTO.SourceCode);
+            foreach(var file in runCDTO.NamesOfFiles)
+            {
+                if (runCDTO.SourceCode[file] != null)
+                {
+                    File.WriteAllText(Path.Combine(workDir, file), runCDTO.SourceCode[file]);
+                }
+            }
             File.WriteAllText(Path.Combine(workDir, "input.txt"), runCDTO.Input);
 
 
@@ -63,7 +69,9 @@ namespace Infastructure.Repository
             }
 
             var output = File.ReadAllText($"{workDir}/output.txt");
-            return new RunCResponse(true, $"Success! Output is: {output.ToString()}");
+
+            Directory.Delete(workDir, recursive: true);
+            return new RunCResponse(true, $"{output.ToString()}");
         }
     }
 }

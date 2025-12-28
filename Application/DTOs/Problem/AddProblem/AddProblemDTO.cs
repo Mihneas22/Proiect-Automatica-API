@@ -26,6 +26,9 @@ namespace Application.DTOs.Problem.AddProblem
         public int Points { get; set; } = 0;
 
         [Required]
-        public string TestsJson { get; set; } = string.Empty;
+        public List<string> InputsJson { get; set; } = new List<string>();
+
+        [Required]
+        public List<string> OuputsJson { get; set; } = new List<string>();
     }
 }

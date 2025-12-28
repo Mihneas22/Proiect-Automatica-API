@@ -24,17 +24,9 @@ namespace Domain.Entities
 
         public int? Points { get; set; }
 
-        public string? TestsJson { get; set; }
+        public List<string>? InputsJson { get; set; }
 
-        [NotMapped]
-        public ICollection<ProblemTest> Tests
-        {
-            get => string.IsNullOrEmpty(TestsJson)
-                ? new List<ProblemTest>()
-                : JsonSerializer.Deserialize<ICollection<ProblemTest>>(TestsJson)!;
-
-            set => TestsJson = JsonSerializer.Serialize(value);
-        }
+        public List<string>? OutputsJson { get; set; }
 
         public double? AcceptanceRate { get; set; }
 

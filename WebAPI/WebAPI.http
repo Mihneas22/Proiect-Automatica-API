@@ -4,14 +4,23 @@ POST {{WebAPI_HostAddress}}/api/problem/addProblem
 Accept: application/json
 Content-Type: application/json
 {
-   "Name": "Fibonacci",
-    "Lab": "Recursivitate",
-    "Tags": ["recursion", "sequence", "math"],
-    "Content": "Scrie o funcție care returnează al n-lea element din șirul Fibonacci.",
-    "Requests": ["Citește un număr n", "Calculează al n-lea Fibonacci", "Afișează rezultatul"],
-    "Points": 20,
-    "TestsJson": "[{\"Input\":\"0\",\"Output\":\"0\"},{\"Input\":\"1\",\"Output\":\"1\"},{\"Input\":\"5\",\"Output\":\"5\"},{\"Input\":\"10\",\"Output\":\"55\"}]"
+  "Name": "Sum of Digits",
+  "Lab": "Lab 5",
+  "Tags": ["C", "Math", "Loops"],
+  "Content": "Write a program that computes the sum of digits of a number.",
+  "Requests": [
+    "Read an integer n (0 <= n <= 100000).",
+    "Print the sum of its digits."
+  ],
+  "Points": 10,
+  "InputsJson": ["123", "456", "1001"],
+  "OuputsJson": ["6", "15", "2"]
 }
+
+
+
+
+
 
 
 

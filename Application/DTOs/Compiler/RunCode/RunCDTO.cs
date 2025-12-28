@@ -8,7 +8,10 @@ namespace Application.DTOs.Compiler.RunCode
     public class RunCDTO
     {
         [Required]
-        public string SourceCode { get; set; } = string.Empty;
+        public Dictionary<string,string> SourceCode { get; set; } = new Dictionary<string, string>();
+
+        [Required]
+        public List<string> NamesOfFiles { get; set; } = new List<string>();
 
         [Required]
         public string Input { get; set; } = string.Empty;
