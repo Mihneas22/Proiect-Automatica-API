@@ -3,6 +3,7 @@ using Application.DTOs.Compiler.RunCode;
 using Application.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace WebAPI.Controllers
 {
@@ -17,6 +18,7 @@ namespace WebAPI.Controllers
             _compilerRepo = compilerRepo;
         }
 
+        [EnableRateLimiting("facult-policy")]
         [HttpPost("runCode")]
         public async Task<ActionResult<RunCResponse>> CompileAndRunCodeAsync(RunCDTO runCDTO)
         {
@@ -24,6 +26,7 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [EnableRateLimiting("facult-policy")]
         [HttpPost("addSubmission")]
         public async Task<ActionResult<RunCResponse>> AddSubmissionAsync(AddSubmissionDTO addSubmissionDTO)
         {

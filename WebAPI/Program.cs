@@ -31,6 +31,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseRateLimiter();
+
 app.MapControllers();
 
 app.Run();

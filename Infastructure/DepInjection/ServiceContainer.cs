@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Infastructure.DepInjection
 {
@@ -38,6 +40,15 @@ namespace Infastructure.DepInjection
                     IssuerSigningKey = new SymmetricSecurityKey
                         (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
                 };
+            });
+
+            services.AddRateLimiter(options =>
+            {
+                options.AddFixedWindowLimiter("facult-policy", opPolicy =>
+                {
+                    opPolicy.PermitLimit = 5;
+                    opPolicy.Window = TimeSpan.FromSeconds(60);
+                });
             });
 
             services.AddScoped<ICompiler, CompilerRepository>();

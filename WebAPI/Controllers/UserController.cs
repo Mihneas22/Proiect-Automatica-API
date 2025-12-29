@@ -4,6 +4,7 @@ using Application.DTOs.User.RegisterUser;
 using Application.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace WebAPI.Controllers
 {
@@ -18,6 +19,7 @@ namespace WebAPI.Controllers
             this.userRepo = _userRepo;
         }
 
+        [EnableRateLimiting("facult-policy")]
         [HttpPost("registerUser")]
         public async Task<ActionResult<RegisterUserResponse>> RegisterUserAsync(RegisterUserDTO registerUserDTO)
         {
@@ -25,6 +27,7 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [EnableRateLimiting("facult-policy")]
         [HttpPost("loginUser")]
         public async Task<ActionResult<LoginUserResponse>> LoginUserAsync(LoginUserDTO loginUserDTO)
         {
