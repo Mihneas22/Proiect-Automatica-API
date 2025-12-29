@@ -4,18 +4,24 @@ POST {{WebAPI_HostAddress}}/api/problem/addProblem
 Accept: application/json
 Content-Type: application/json
 {
-  "Name": "Sum of Digits",
-  "Lab": "Lab 5",
-  "Tags": ["C", "Math", "Loops"],
-  "Content": "Write a program that computes the sum of digits of a number.",
-  "Requests": [
-    "Read an integer n (0 <= n <= 100000).",
-    "Print the sum of its digits."
+  "name": "Suma și media a două numere folosind funcții",
+  "lab": "Laboratorul 2 - Funcții",
+  "tags": ["C", "functii", "int", "double"],
+  "content": "Se citesc de la tastatură două numere întregi. Să se calculeze suma și media aritmetică folosind funcții separate.",
+  "requests": [
+    "O funcție pentru sumă",
+    "O funcție pentru media aritmetică"
   ],
-  "Points": 10,
-  "InputsJson": ["123", "456", "1001"],
-  "OuputsJson": ["6", "15", "2"]
+  "points": 15,
+  "inputsJson": [
+    "6 4"
+  ],
+  "ouputsJson": [
+    "Suma: 10 Media: 5.00"
+  ]
 }
+
+
 
 
 

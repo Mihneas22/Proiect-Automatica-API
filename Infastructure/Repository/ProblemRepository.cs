@@ -58,7 +58,9 @@ namespace Infastructure.Repository
             if (getProblemByIdDTO == null)
                 return new GetProblemByIdResponse(false, "Invalid message");
 
-            var pb = await dbContext.ProblemEntity!.FirstOrDefaultAsync(pb => pb.ProblemId == getProblemByIdDTO.ProblemId);
+            var pb = await dbContext.ProblemEntity!
+                .Include(pb => pb.ProblemSubmissions)
+                .FirstOrDefaultAsync(pb => pb.ProblemId == getProblemByIdDTO.ProblemId);
             if (pb != null)
                 return new GetProblemByIdResponse(true, "Success!", pb);
             else

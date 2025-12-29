@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Compiler.AddSubmission;
 using Application.DTOs.Compiler.RunCode;
+using Application.DTOs.Compiler.RunCompiler;
 using Application.Repository;
 using Infastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,7 @@ namespace Infastructure.Repository
             this.dbContext = dbContext;
         }
 
-        public async Task<AddSubmissionResponse> AddSubmissionRepository(AddSubmissionDTO addSubDTO)
-        {
-            if (addSubDTO == null)
-                return new AddSubmissionResponse(false, "Invalid data");
-
-            return new AddSubmissionResponse(false, "Invalid data");
-
-        }
-
-        public async Task<RunCResponse> CompileAndRunCode(RunCDTO runCDTO)
+        private RunCResponse CompileCode(RunCompilerDTO runCDTO)
         {
             var submissionId = Guid.NewGuid();
             var workDir = Path.Combine("D:\\facultate\\ProjetFacult\\Temp\\submissions", submissionId.ToString());
@@ -40,7 +32,7 @@ namespace Infastructure.Repository
             File.Copy(runScriptSource, runScriptDest, true);
 
 
-            foreach(var file in runCDTO.NamesOfFiles)
+            foreach (var file in runCDTO.NamesOfFiles)
             {
                 if (runCDTO.SourceCode[file] != null)
                 {
@@ -67,7 +59,7 @@ namespace Infastructure.Repository
             if (!process.WaitForExit(2000))
             {
                 process.Kill();
-                return new RunCResponse(false,"Exceed time limit");
+                return new RunCResponse(false, "Exceed time limit");
             }
 
             var compileErrorPath = Path.Combine(workDir, "compile_error.txt");
@@ -91,6 +83,127 @@ namespace Infastructure.Repository
             Directory.Delete(workDir, recursive: true);
 
             return new RunCResponse(true, $"{output.ToString()}");
+        }
+
+        public async Task<AddSubmissionResponse> AddSubmissionRepository(AddSubmissionDTO addSubDTO)
+        {
+            if (addSubDTO == null)
+                return new AddSubmissionResponse(false, "Invalid data");
+
+            var pb = await dbContext.ProblemEntity!.FirstOrDefaultAsync(pb => pb.ProblemId == addSubDTO.ProblemId);
+            var user = await dbContext.UserEntity!.FirstOrDefaultAsync(us => us.Id == addSubDTO.UserId);
+            if (pb == null || user == null)
+                return new AddSubmissionResponse(false, "Problem or user not found");
+
+            int indx = 0;
+            foreach(var input in pb.InputsJson!)
+            {
+                var runTest = CompileCode(new RunCompilerDTO
+                {
+                    SourceCode = addSubDTO.SourceCode,
+                    NamesOfFiles = addSubDTO.NamesOfFiles,
+                    Input = input,
+                });
+
+                if (runTest.Flag == false)
+                {
+                    dbContext.SubmissionEntity!.Add(new Domain.Entities.Submission
+                    {
+                        UserId = addSubDTO.UserId,
+                        User = user,
+                        ProblemId = addSubDTO.ProblemId,
+                        Problem = pb,
+                        Content = addSubDTO.SourceCode.ToString(),
+                        Status = Domain.Entities.Submission.StatusType.Rejected,
+                        Message = $"Compilation error at test {indx+1}",
+                        SubmittedAt = DateTime.Now
+                    });
+
+                    await dbContext.SaveChangesAsync();
+                    return new AddSubmissionResponse(false, $"Error found in test number {indx + 1}");
+                }
+                    
+
+
+                if (runTest.message != pb.OutputsJson![indx])
+                {
+                    dbContext.SubmissionEntity!.Add(new Domain.Entities.Submission
+                    {
+                        UserId = addSubDTO.UserId,
+                        User = user,
+                        ProblemId = addSubDTO.ProblemId,
+                        Problem = pb,
+                        Content = "empty content",
+                        Status = Domain.Entities.Submission.StatusType.Rejected,
+                        Message = $"Test failed: {indx + 1}",
+                        SubmittedAt = DateTime.Now
+                    });
+
+                    await dbContext.SaveChangesAsync();
+                    return new AddSubmissionResponse(false, $"Expected output {pb.OutputsJson![indx]} in test {indx + 1} but got {runTest.message}");
+                }   
+
+                indx += 1;
+            }
+
+            var sub = new Domain.Entities.Submission
+            {
+                UserId = addSubDTO.UserId,
+                User = user,
+                ProblemId = addSubDTO.ProblemId,
+                Problem = pb,
+                Content = addSubDTO.SourceCode.ToString(),
+                Status = Domain.Entities.Submission.StatusType.Approved,
+                Message = "Added succsefully!",
+                SubmittedAt = DateTime.Now
+            };
+
+            if (dbContext.SubmissionEntity == null)
+            {
+                throw new InvalidOperationException("SubmissionEntity DbSet is not initialized.");
+            }
+
+            dbContext.SubmissionEntity.Add(sub);
+
+            user.UserSubmissions.Add(sub);
+            pb.ProblemSubmissions.Add(sub);
+
+            await dbContext.SaveChangesAsync();
+
+            return new AddSubmissionResponse(true, "Added sucsefully!");
+        }
+
+        public async Task<RunCResponse> CompileAndRunCode(RunCDTO runCDTO)
+        {
+            if (runCDTO == null)
+                return new RunCResponse(false, "Invalid data");
+
+            var pb = await dbContext.ProblemEntity!.FirstOrDefaultAsync(pb => pb.ProblemId == runCDTO.ProblemId);
+            var user = await dbContext.UserEntity!.FirstOrDefaultAsync(us => us.Id == runCDTO.UserId);
+            if (pb == null || user == null)
+                return new RunCResponse(false, "Problem or user not found");
+
+            int indx = 0;
+            foreach (var input in pb.InputsJson!)
+            {
+                var runTest = CompileCode(new RunCompilerDTO
+                {
+                    SourceCode = runCDTO.SourceCode,
+                    NamesOfFiles = runCDTO.NamesOfFiles,
+                    Input = input
+                });
+
+                if (runTest.Flag == false)
+                    return new RunCResponse(false, $"Error found in test number {indx + 1}");
+
+
+                if (runTest.message != pb.OutputsJson![indx])
+                    return new RunCResponse(false, $"Expected output {pb.OutputsJson![indx]} in test {indx + 1} but got {runTest.message}");
+
+                indx += 1;
+            }
+
+            return new RunCResponse(true, "All tests passed!");
         }
     }
 }

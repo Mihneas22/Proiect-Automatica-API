@@ -16,7 +16,7 @@ namespace Domain.Entities
 
         public string? Password { get; set; }
 
-        public ICollection<Submission>? UserSubmissions { get; set; }
+        public ICollection<Submission> UserSubmissions { get; set; } = new List<Submission>();
 
         public DateTime CreatedAt { get; set; }
     }

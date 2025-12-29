@@ -24,8 +24,8 @@ namespace Infastructure.Context
                 .HasForeignKey(sub => sub.ProblemId);
         }
 
-        public DbSet<User>? UserEntity { get; set; }
-        public DbSet<Submission>? SubmissionEntity { get; set; }
-        public DbSet<Problem>? ProblemEntity { get; set; }
+        public DbSet<User> UserEntity { get; set; } = null!;
+        public DbSet<Submission> SubmissionEntity { get; set; } = null!;
+        public DbSet<Problem> ProblemEntity { get; set; } = null!;
     }
 }

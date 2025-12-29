@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Compiler.RunCode;
+﻿using Application.DTOs.Compiler.AddSubmission;
+using Application.DTOs.Compiler.RunCode;
 using Application.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,17 @@ namespace WebAPI.Controllers
             _compilerRepo = compilerRepo;
         }
 
-        [HttpPost("addSub")]
-        public async Task<ActionResult<RunCResponse>> CompileAndRunCode(RunCDTO runCDTO)
+        [HttpPost("runCode")]
+        public async Task<ActionResult<RunCResponse>> CompileAndRunCodeAsync(RunCDTO runCDTO)
         {
             var result = await _compilerRepo.CompileAndRunCode(runCDTO);
+            return Ok(result);
+        }
+
+        [HttpPost("addSubmission")]
+        public async Task<ActionResult<RunCResponse>> AddSubmissionAsync(AddSubmissionDTO addSubmissionDTO)
+        {
+            var result = await _compilerRepo.AddSubmissionRepository(addSubmissionDTO);
             return Ok(result);
         }
     }

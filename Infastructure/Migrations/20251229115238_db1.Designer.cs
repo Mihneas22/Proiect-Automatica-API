@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251217204532_db1")]
+    [Migration("20251229115238_db1")]
     partial class db1
     {
         /// <inheritdoc />
@@ -24,6 +24,47 @@ namespace Infastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Entities.Problem", b =>
+                {
+                    b.Property<Guid>("ProblemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double?>("AcceptanceRate")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.PrimitiveCollection<string>("InputsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lab")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("OutputsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Points")
+                        .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("Requests")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("Tags")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProblemId");
+
+                    b.ToTable("ProblemEntity");
+                });
 
             modelBuilder.Entity("Domain.Entities.Submission", b =>
                 {
@@ -37,16 +78,21 @@ namespace Infastructure.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("ProblemId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("Status")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("SubmittedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("SubmissionId");
+
+                    b.HasIndex("ProblemId");
 
                     b.HasIndex("UserId");
 
@@ -78,13 +124,24 @@ namespace Infastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Submission", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("UserSubmissions")
-                        .HasForeignKey("UserId")
+                    b.HasOne("Domain.Entities.Problem", "Problem")
+                        .WithMany("ProblemSubmissions")
+                        .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("UserSubmissions")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Problem");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Problem", b =>
+                {
+                    b.Navigation("ProblemSubmissions");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>

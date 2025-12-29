@@ -30,7 +30,7 @@ namespace Domain.Entities
 
         public double? AcceptanceRate { get; set; }
 
-        public ICollection<Submission>? ProblemSubmissions { get; set; }
+        public ICollection<Submission> ProblemSubmissions { get; set; } = new List<Submission>();
 
         public DateTime? CreatedAt { get; set; }
     }

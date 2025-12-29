@@ -70,7 +70,7 @@ namespace Infastructure.Repository
             if (registerUserDTO == null)
                 return new RegisterUserResponse(false, "Invalid data.");
 
-            if (registerUserDTO.Password != registerUserDTO.Password)
+            if (registerUserDTO.Password != registerUserDTO.ConfirmPassword)
                 return new RegisterUserResponse(false, "Passwords do not match.");
 
             var user = await dbContext.UserEntity!.FirstOrDefaultAsync(u => u.Email == registerUserDTO.Email || u.Username == registerUserDTO.Username);
@@ -96,7 +96,9 @@ namespace Infastructure.Repository
             if (getUserDTO == null)
                 return new GetUserResponse(false, "Invalid data");
 
-            var user = await dbContext.UserEntity!.FirstOrDefaultAsync(us => us.Email == getUserDTO.Email && us.Username == getUserDTO.Username);
+            var user = await dbContext.UserEntity!
+                .Include(sub => sub.UserSubmissions)
+                .FirstOrDefaultAsync(us => us.Email == getUserDTO.Email && us.Username == getUserDTO.Username);
             if(user == null)
                 return new GetUserResponse(false, "Invalid data");
             else

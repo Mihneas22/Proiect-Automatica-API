@@ -14,9 +14,6 @@ namespace Application.DTOs.Compiler.RunCode
         public List<string> NamesOfFiles { get; set; } = new List<string>();
 
         [Required]
-        public string Input { get; set; } = string.Empty;
-
-        [Required]
         public Guid UserId { get; set; } = Guid.Empty;
 
         [Required]
