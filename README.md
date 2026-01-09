@@ -7,132 +7,187 @@ Scopul proiectului este de a oferi un mediu organizat pentru:
 - pregătirea pentru examene și colocvii
 - aprofundarea structurilor de date și a tehnicilor avansate
 
-### 📌 Cerințe preliminare
+==================================================
 
-Înainte de a începe, asigură-te că ai instalate următoarele:
+ACEST DOCUMENT EXPLICA PASII NECESARI PENTRU RULAREA
+API-ULUI PE UN SISTEM LOCAL.
 
-- .NET SDK (versiunea folosită de proiect)
-- Docker Desktop
+==================================================
+
+
+CERINTE PRELIMINARE
+
+- .NET SDK (versiunea folosita in proiect)
+- Docker Desktop (instalat si pornit)
 - SQL Server sau SQL Server Management Studio (SSMS)
 - Git
 
----
 
-## 1️⃣ Configurarea path-urilor locale (OBLIGATORIU)
+==================================================
+PASUL 1 - CONFIGURAREA PATH-URILOR LOCALE
+==================================================
 
-Înainte de rularea API-ului, trebuie să modifici path-urile locale din fișierul:
+INAINTE DE RULAREA API-ULUI, ESTE OBLIGATORIU SA
+MODIFICI PATH-URILE LOCALE DIN COD.
 
+Fisier:
 Infrastructure/Repository/CompilerRepository.cs
 
-go
-Copiază codul
-
-În funcția:
-
-```csharp
+Functia:
 private RunCResponse CompileCode(RunCompilerDTO runCDTO)
-🔧 Modificări necesare
-Fiecare utilizator trebuie să își seteze path-urile locale proprii, în funcție de structura folderelor de pe calculatorul său.
 
-📁 Director pentru submissions
-csharp
-Copiază codul
-// Exemplu laptop
-// C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\Temp\\submissions\\
 
-// Exemplu PC
-// D:\\facultate\\ProjetFacult\\Temp\\submissions
+--------------------------------------------------
+1.1 PATH PENTRU SUBMISSIONS
+--------------------------------------------------
+
+Cauta in cod:
+
+var workDir = Path.Combine("...", submissionId.ToString());
+
+Exemple de path-uri:
+
+Laptop:
+C:\Users\pc\coding\api_fac\Proiect-Automatica-API\Temp\submissions\
+
+PC:
+D:\facultate\ProjetFacult\Temp\submissions\
+
+Exemplu corect:
 
 var workDir = Path.Combine(
     "D:\\facultate\\ProjetFacult\\Temp\\submissions",
     submissionId.ToString()
 );
-👉 Înlocuiește path-ul cu unul valid de pe calculatorul tău.
 
-📁 Director pentru CodeRunner (cpp)
-csharp
-Copiază codul
-// Exemplu laptop
-// C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\CodeRunner\\cpp\\
+IMPORTANT:
+- Folderul trebuie sa existe pe disc
+- API-ul trebuie sa aiba drepturi de scriere
 
-// Exemplu PC
-// D:\\facultate\\ProjetFacult\\CodeRunner\\cpp
+
+--------------------------------------------------
+1.2 PATH PENTRU CODERUNNER (CPP)
+--------------------------------------------------
+
+Cauta in cod:
+
+var runScriptSource = Path.Combine("...", "run.sh");
+
+Exemple de path-uri:
+
+Laptop:
+C:\Users\pc\coding\api_fac\Proiect-Automatica-API\CodeRunner\cpp\
+
+PC:
+D:\facultate\ProjetFacult\CodeRunner\cpp\
+
+Exemplu corect:
 
 var runScriptSource = Path.Combine(
     "D:\\facultate\\ProjetFacult\\CodeRunner\\cpp",
     "run.sh"
 );
-👉 Acest path trebuie să ducă la folderul CodeRunner/cpp din proiect.
 
-2️⃣ Configurarea bazei de date MSSQL
-API-ul folosește o bază de date Microsoft SQL Server.
 
-✔ Opțiuni acceptate:
-SQL Server local
+==================================================
+PASUL 2 - CONFIGURAREA BAZEI DE DATE MSSQL
+==================================================
 
-SQL Server prin Docker
+API-ul foloseste o baza de date Microsoft SQL Server.
 
-SQL Server Management Studio (SSMS)
+Poti folosi:
+- SQL Server local
+- SQL Server in Docker
+- SQL Server Management Studio (SSMS)
 
-🔧 Connection String
-Deschide fișierul:
+--------------------------------------------------
+2.1 MODIFICAREA CONNECTION STRING-ULUI
+--------------------------------------------------
 
-pgsql
-Copiază codul
+Fisier:
 appsettings.json
-și modifică ConnectionStrings:
 
-json
-Copiază codul
+Exemplu:
+
 "ConnectionStrings": {
   "DefaultConnection": "Server=localhost;Database=NumeBazaDate;Trusted_Connection=True;TrustServerCertificate=True;"
 }
-🔁 Înlocuiește:
 
-Server – cu instanța ta SQL
+INLOCUIESTE:
+- Server cu instanta ta SQL
+- Database cu numele bazei tale de date
+- Autentificarea daca folosesti user/parola
 
-Database – cu numele bazei tale de date
 
-autentificarea, dacă folosești user/parolă
+==================================================
+PASUL 3 - CONFIGURAREA DOCKER PENTRU CPP
+==================================================
 
-3️⃣ Construirea containerului Docker pentru C/C++
-Pentru rularea codului C/C++, proiectul folosește un container Docker numit cpp-runner.
+Proiectul foloseste Docker pentru compilarea si
+rularea codului C/C++.
 
-📂 Navighează în folderul:
-bash
-Copiază codul
+--------------------------------------------------
+3.1 NAVIGARE IN FOLDER
+--------------------------------------------------
+
+Deschide un terminal in:
+
 CodeRunner/cpp/
-🐳 Build imagine Docker
-bash
-Copiază codul
+
+
+--------------------------------------------------
+3.2 BUILD IMAGINE DOCKER
+--------------------------------------------------
+
+Ruleaza comanda:
+
 docker build -t cpp-runner .
-▶ Rulare container (test)
-bash
-Copiază codul
+
+
+--------------------------------------------------
+3.3 TEST RULARE CONTAINER
+--------------------------------------------------
+
+Ruleaza comanda:
+
 docker run cpp-runner
-📌 Notă: Docker Desktop trebuie să fie pornit.
 
-4️⃣ Rularea API-ului
-Din directorul principal al proiectului, rulează:
+Daca nu apar erori, containerul este configurat corect.
 
-bash
-Copiază codul
+
+==================================================
+PASUL 4 - RULAREA API-ULUI
+==================================================
+
+Din folderul principal al proiectului ruleaza:
+
 dotnet restore
 dotnet run
-API-ul va porni și va putea primi cereri pentru compilarea și rularea codului.
 
-⚠ Probleme comune
-❌ Docker nu pornește → verifică dacă Docker Desktop este instalat și pornit
 
-❌ Erori de path → verifică dacă folderele există fizic pe disc
+==================================================
+PROBLEME FRECVENTE
+==================================================
 
-❌ Timeout la rulare → containerul Docker nu răspunde sau run.sh nu este copiat corect
+- Docker nu porneste:
+  Verifica daca Docker Desktop este instalat si pornit
 
-✅ Concluzie
-După parcurgerea tuturor pașilor:
+- Erori de path:
+  Verifica daca folderele exista fizic pe disc
 
-API-ul va rula local
+- Timeout la rulare:
+  Containerul Docker nu ruleaza sau scriptul run.sh
+  nu este copiat corect
 
-Codul C/C++ va fi compilat și executat în Docker
 
-Output-ul va fi returnat corect către client
+==================================================
+FINAL
+==================================================
+
+Dupa parcurgerea tuturor pasilor:
+- API-ul va rula local
+- Codul C/C++ va fi compilat si rulat in Docker
+- Output-ul va fi returnat corect
+
+==================================================
+
