@@ -20,6 +20,15 @@ namespace Infastructure.Repository
             this.dbContext = dbContext;
         }
 
+        private void UpdateAcceptanceRate(Domain.Entities.Problem pb,bool currentIsCorrect)
+        {
+            int correct = pb.ProblemSubmissions.Count(s => s.Status == Domain.Entities.Submission.StatusType.Approved);
+            if (currentIsCorrect) correct++;
+
+            int total = pb.ProblemSubmissions.Count + 1;
+            pb.AcceptanceRate = Math.Round((double)correct * 100.0 / total, 2);
+        }
+
         private RunCResponse CompileCode(RunCompilerDTO runCDTO)
         {
             var submissionId = Guid.NewGuid();
@@ -62,8 +71,8 @@ namespace Infastructure.Repository
             if (!process.WaitForExit(5000))
             {
                 var error = process.StandardError.ReadToEnd();
-    process.Kill();
-    return new RunCResponse(false, $"Timeout. Error: {error}");
+                process.Kill();
+                return new RunCResponse(false, $"Timeout. Error: {error}");
             }
 
             var compileErrorPath = Path.Combine(workDir, "compile_error.txt");
@@ -94,13 +103,24 @@ namespace Infastructure.Repository
             if (addSubDTO == null)
                 return new AddSubmissionResponse(false, "Invalid data");
 
-            var pb = await dbContext.ProblemEntity!.FirstOrDefaultAsync(pb => pb.ProblemId == addSubDTO.ProblemId);
+            var pb = await dbContext.ProblemEntity!
+                .Include(sub => sub.ProblemSubmissions)
+                .FirstOrDefaultAsync(pb => pb.ProblemId == addSubDTO.ProblemId);
             var user = await dbContext.UserEntity!.FirstOrDefaultAsync(us => us.Id == addSubDTO.UserId);
             if (pb == null || user == null)
                 return new AddSubmissionResponse(false, "Problem or user not found");
 
+            var sub1 = await dbContext.SubmissionEntity!.FirstOrDefaultAsync(sub => sub.ProblemId == addSubDTO.ProblemId && sub.UserId == addSubDTO.UserId);
+            if(sub1 != null)
+                if(sub1.Status == Domain.Entities.Submission.StatusType.Approved)
+                    return new AddSubmissionResponse(false, "Submission already sent");
+
             int indx = 0;
-            foreach(var input in pb.InputsJson!)
+
+            int correct = 0;
+            int nrt = 0;
+
+            foreach (var input in pb.InputsJson!)
             {
                 var runTest = CompileCode(new RunCompilerDTO
                 {
@@ -143,11 +163,19 @@ namespace Infastructure.Repository
                         SubmittedAt = DateTime.Now
                     });
 
+                    UpdateAcceptanceRate(pb, false);
                     await dbContext.SaveChangesAsync();
                     return new AddSubmissionResponse(false, $"Expected output {pb.OutputsJson![indx]} in test {indx + 1} but got {runTest.message}");
                 }   
 
                 indx += 1;
+            }
+
+            string contentCode = "";
+            foreach (var file in addSubDTO.SourceCode)
+            {
+                contentCode += file.Key + "\n";
+                contentCode += file.Value + "\n";
             }
 
             var sub = new Domain.Entities.Submission
@@ -156,7 +184,7 @@ namespace Infastructure.Repository
                 User = user,
                 ProblemId = addSubDTO.ProblemId,
                 Problem = pb,
-                Content = addSubDTO.SourceCode.ToString(),
+                Content = contentCode,
                 Status = Domain.Entities.Submission.StatusType.Approved,
                 Message = "Added succsefully!",
                 SubmittedAt = DateTime.Now
@@ -166,6 +194,8 @@ namespace Infastructure.Repository
             {
                 throw new InvalidOperationException("SubmissionEntity DbSet is not initialized.");
             }
+
+            UpdateAcceptanceRate(pb, true);
 
             dbContext.SubmissionEntity.Add(sub);
 
