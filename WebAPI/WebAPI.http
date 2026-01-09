@@ -3,23 +3,35 @@
 POST {{WebAPI_HostAddress}}/api/problem/addProblem
 Accept: application/json
 Content-Type: application/json
+
 {
-  "name": "Suma și media a două numere folosind funcții",
-  "lab": "Laboratorul 2 - Funcții",
-  "tags": ["C", "functii", "int", "double"],
-  "content": "Se citesc de la tastatură două numere întregi. Să se calculeze suma și media aritmetică folosind funcții separate.",
-  "requests": [
-    "O funcție pentru sumă",
-    "O funcție pentru media aritmetică"
+  "name": "Suma cifrelor pare si impare",
+  "lab": "Functii",
+  "tags": [
+    "numere",
+    "functii",
+    "cifre"
   ],
-  "points": 15,
+  "content": "Se citeste un numar natural n. Sa se calculeze suma cifrelor pare si suma cifrelor impare ale numarului, folosind functii separate.",
+  "requests": [
+    "Cititi numarul n de la tastatura",
+    "Creati o functie care calculeaza suma cifrelor pare",
+    "Creati o functie care calculeaza suma cifrelor impare",
+    "Afisati rezultatele in formatul cerut"
+  ],
+  "points": 10,
   "inputsJson": [
-    "6 4"
+    "1234",
+    "90876",
+    "111222"
   ],
   "ouputsJson": [
-    "Suma: 10 Media: 5.00"
+    "Pare: 6 Impare: 4",
+    "Pare: 30 Impare: 0",
+    "Pare: 6 Impare: 3"
   ]
 }
+
 
 
 

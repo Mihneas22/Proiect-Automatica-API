@@ -3,4 +3,4 @@ gcc *.c -o program 2> compile_error.txt
 if [ $? -ne 0 ]; then
     exit 1
 fi
-timeout 1s ./program < input.txt > output.txt
+./program < input.txt > output.txt

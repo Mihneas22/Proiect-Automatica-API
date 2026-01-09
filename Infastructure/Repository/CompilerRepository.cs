@@ -23,11 +23,11 @@ namespace Infastructure.Repository
         private RunCResponse CompileCode(RunCompilerDTO runCDTO)
         {
             var submissionId = Guid.NewGuid();
-            var workDir = Path.Combine("D:\\facultate\\ProjetFacult\\Temp\\submissions", submissionId.ToString());
+            var workDir = Path.Combine("C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\Temp\\submissions\\", submissionId.ToString());
             Directory.CreateDirectory(workDir);
 
 
-            var runScriptSource = Path.Combine("D:\\facultate\\ProjetFacult\\CodeRunner\\cpp", "run.sh");
+            var runScriptSource = Path.Combine("C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\CodeRunner\\cpp\\", "run.sh");
             var runScriptDest = Path.Combine(workDir, "run.sh");
             File.Copy(runScriptSource, runScriptDest, true);
 
@@ -56,10 +56,11 @@ namespace Infastructure.Repository
             process.Start();
 
 
-            if (!process.WaitForExit(2000))
+            if (!process.WaitForExit(5000))
             {
-                process.Kill();
-                return new RunCResponse(false, "Exceed time limit");
+                var error = process.StandardError.ReadToEnd();
+    process.Kill();
+    return new RunCResponse(false, $"Timeout. Error: {error}");
             }
 
             var compileErrorPath = Path.Combine(workDir, "compile_error.txt");
@@ -194,7 +195,7 @@ namespace Infastructure.Repository
                 });
 
                 if (runTest.Flag == false)
-                    return new RunCResponse(false, $"Error found in test number {indx + 1}");
+                    return new RunCResponse(false, $"Error found in test number {indx + 1}: ${runTest.message}");
 
 
                 if (runTest.message != pb.OutputsJson![indx])
