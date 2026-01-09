@@ -23,11 +23,14 @@ namespace Infastructure.Repository
         private RunCResponse CompileCode(RunCompilerDTO runCDTO)
         {
             var submissionId = Guid.NewGuid();
-            var workDir = Path.Combine("C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\Temp\\submissions\\", submissionId.ToString());
+            //laptop - C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\Temp\\submissions\\
+            //pc - D:\\\\facultate\\\\ProjetFacult\\\\Temp\\\\submissions
+            var workDir = Path.Combine("D:\\\\facultate\\\\ProjetFacult\\\\Temp\\\\submissions", submissionId.ToString());
             Directory.CreateDirectory(workDir);
 
-
-            var runScriptSource = Path.Combine("C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\CodeRunner\\cpp\\", "run.sh");
+            //laptop - C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\CodeRunner\\cpp\\
+            //pc - D:\\facultate\\ProjetFacult\\CodeRunner\\cpp
+            var runScriptSource = Path.Combine("D:\\facultate\\ProjetFacult\\CodeRunner\\cpp", "run.sh");
             var runScriptDest = Path.Combine(workDir, "run.sh");
             File.Copy(runScriptSource, runScriptDest, true);
 
@@ -195,12 +198,7 @@ namespace Infastructure.Repository
                 });
 
                 if (runTest.Flag == false)
-<<<<<<< HEAD
                     return new RunCResponse(false, $"Error found in test number {indx + 1}: ${runTest.message}");
-=======
-                    return new RunCResponse(false, $"Error found in test number {indx + 1}: {runTest.message}");
->>>>>>> cb6fba77c9c3a66880140180290b12c64fa92004
-
 
                 if (runTest.message != pb.OutputsJson![indx])
                     return new RunCResponse(false, $"Expected output {pb.OutputsJson![indx]} in test {indx + 1} but got {runTest.message}");
