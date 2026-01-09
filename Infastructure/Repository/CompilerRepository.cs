@@ -121,7 +121,7 @@ namespace Infastructure.Repository
                     });
 
                     await dbContext.SaveChangesAsync();
-                    return new AddSubmissionResponse(false, $"Error found in test number {indx + 1}");
+                    return new AddSubmissionResponse(false, $"Error found in test number {indx + 1}: {runTest.message}");
                 }
                     
 
@@ -195,7 +195,11 @@ namespace Infastructure.Repository
                 });
 
                 if (runTest.Flag == false)
+<<<<<<< HEAD
                     return new RunCResponse(false, $"Error found in test number {indx + 1}: ${runTest.message}");
+=======
+                    return new RunCResponse(false, $"Error found in test number {indx + 1}: {runTest.message}");
+>>>>>>> cb6fba77c9c3a66880140180290b12c64fa92004
 
 
                 if (runTest.message != pb.OutputsJson![indx])

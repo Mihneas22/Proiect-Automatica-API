@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,5 +28,6 @@ namespace Infastructure.Context
         public DbSet<User> UserEntity { get; set; } = null!;
         public DbSet<Submission> SubmissionEntity { get; set; } = null!;
         public DbSet<Problem> ProblemEntity { get; set; } = null!;
+        public DbSet<IdempotencyRecord> IdempotencyEntity { get; set; } = null!;
     }
 }

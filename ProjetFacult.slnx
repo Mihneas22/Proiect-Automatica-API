@@ -1,6 +1,8 @@
 <Solution>
-  <Project Path="Application/Application.csproj" />
-  <Project Path="Domain/Domain.csproj" />
-  <Project Path="Infastructure/Infastructure.csproj" />
-  <Project Path="WebAPI/WebAPI.csproj" />
+  <Folder Name="/SolutionAPI/">
+    <Project Path="Application/Application.csproj" />
+    <Project Path="Domain/Domain.csproj" />
+    <Project Path="Infastructure/Infastructure.csproj" />
+    <Project Path="WebAPI/WebAPI.csproj" />
+  </Folder>
 </Solution>

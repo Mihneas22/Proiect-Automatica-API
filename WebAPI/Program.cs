@@ -1,4 +1,5 @@
 using Infastructure.DepInjection;
+using Infastructure.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -32,6 +33,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseRateLimiter();
+
+app.UseMiddleware<IdempotencyMiddleware>();
 
 app.MapControllers();
 
