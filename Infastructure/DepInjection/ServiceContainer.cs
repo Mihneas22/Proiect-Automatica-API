@@ -38,7 +38,9 @@ namespace Infastructure.DepInjection
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey
-                        (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                        (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),
+
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
                 };
             });
 
@@ -51,6 +53,7 @@ namespace Infastructure.DepInjection
                 });
             });
 
+            services.AddScoped<IAdmin, AdminRepository>();
             services.AddScoped<ICompiler, CompilerRepository>();
             services.AddScoped<IUser, UserRepository>();
             services.AddScoped<IProblem, ProblemRepository>();

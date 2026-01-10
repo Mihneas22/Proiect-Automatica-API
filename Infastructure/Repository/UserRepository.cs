@@ -26,20 +26,41 @@ namespace Infastructure.Repository
             this.configuration = configuration;
         }
 
-        private string GenerateJWTToken(User user, Admin admin)
+        private string GenerateJWTToken(User? user, Admin? admin)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            
-            if(admin != null)
+
+            if (admin != null)
+            {
+                var adminClaims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
+                    new Claim(ClaimTypes.Name, admin.Username!),
+                    new Claim(ClaimTypes.Email, admin.Email!),
+                    new Claim(ClaimTypes.Role, "admin")
+                };
+
+                var token = new JwtSecurityToken(
+                    issuer: configuration["Jwt:Issuer"],
+                    audience: configuration["Jwt:Audience"],
+                    claims: adminClaims,
+                    expires: DateTime.Now.AddDays(30),
+                    signingCredentials: credentials
+                );
+
+                return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            else if (user != null)
             {
                 var userClaims = new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username!),
                     new Claim(ClaimTypes.Email, user.Email!),
-                    new Claim(ClaimTypes.Role, "admin")
+                    new Claim(ClaimTypes.Role, "user")
                 };
+
 
                 var token = new JwtSecurityToken(
                     issuer: configuration["Jwt:Issuer"],
@@ -52,26 +73,7 @@ namespace Infastructure.Repository
                 return new JwtSecurityTokenHandler().WriteToken(token);
             }
             else
-            {
-                var userClaims = new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Username!),
-                    new Claim(ClaimTypes.Email, user.Email!),
-                    new Claim(ClaimTypes.Role, "user")
-                };
-
-                    
-                var token = new JwtSecurityToken(
-                    issuer: configuration["Jwt:Issuer"],
-                    audience: configuration["Jwt:Audience"],
-                    claims: userClaims,
-                    expires: DateTime.Now.AddDays(30),
-                    signingCredentials: credentials
-                );
-
-                return new JwtSecurityTokenHandler().WriteToken(token);
-            }
+                return string.Empty;
         }
         public async Task<LoginUserResponse> LoginUserRepository(LoginUserDTO loginUserDTO)
         {

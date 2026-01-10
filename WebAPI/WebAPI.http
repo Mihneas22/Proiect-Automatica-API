@@ -1,35 +1,12 @@
 ﻿@WebAPI_HostAddress = http://localhost:5052
 
-GET {{WebAPI_HostAddress}}/api/problem/getProblems
+GET {{WebAPI_HostAddress}}/api/admin/getUsers
 Accept: application/json
 Content-Type: application/json
-
 {
-  "name": "Suma cifrelor pare si impare",
-  "lab": "Functii",
-  "tags": [
-    "numere",
-    "functii",
-    "cifre"
-  ],
-  "content": "Se citeste un numar natural n. Sa se calculeze suma cifrelor pare si suma cifrelor impare ale numarului, folosind functii separate.",
-  "requests": [
-    "Cititi numarul n de la tastatura",
-    "Creati o functie care calculeaza suma cifrelor pare",
-    "Creati o functie care calculeaza suma cifrelor impare",
-    "Afisati rezultatele in formatul cerut"
-  ],
-  "points": 10,
-  "inputsJson": [
-    "1234",
-    "90876",
-    "111222"
-  ],
-  "ouputsJson": [
-    "Pare: 6 Impare: 4",
-    "Pare: 30 Impare: 0",
-    "Pare: 6 Impare: 3"
-  ]
+    "Username": "MihneaAdmin",
+    "Email": "mihnea.serban06@gmail.com",
+    "Password": "Agentm22"
 }
 
 
