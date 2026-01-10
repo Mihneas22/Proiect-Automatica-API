@@ -34,12 +34,12 @@ namespace Infastructure.Repository
             var submissionId = Guid.NewGuid();
             //laptop - C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\Temp\\submissions\\
             //pc - D:\\\\facultate\\\\ProjetFacult\\\\Temp\\\\submissions
-            var workDir = Path.Combine("D:\\\\facultate\\\\ProjetFacult\\\\Temp\\\\submissions", submissionId.ToString());
+            var workDir = Path.Combine("C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\Temp\\submissions\\", submissionId.ToString());
             Directory.CreateDirectory(workDir);
 
             //laptop - C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\CodeRunner\\cpp\\
             //pc - D:\\facultate\\ProjetFacult\\CodeRunner\\cpp
-            var runScriptSource = Path.Combine("D:\\facultate\\ProjetFacult\\CodeRunner\\cpp", "run.sh");
+            var runScriptSource = Path.Combine("C:\\Users\\pc\\coding\\api_fac\\Proiect-Automatica-API\\CodeRunner\\cpp\\", "run.sh");
             var runScriptDest = Path.Combine(workDir, "run.sh");
             File.Copy(runScriptSource, runScriptDest, true);
 

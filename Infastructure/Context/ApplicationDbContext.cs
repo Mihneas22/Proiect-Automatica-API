@@ -26,6 +26,7 @@ namespace Infastructure.Context
         }
 
         public DbSet<User> UserEntity { get; set; } = null!;
+        public DbSet<Admin> AdminEntity { get; set; } = null!;
         public DbSet<Submission> SubmissionEntity { get; set; } = null!;
         public DbSet<Problem> ProblemEntity { get; set; } = null!;
         public DbSet<IdempotencyRecord> IdempotencyEntity { get; set; } = null!;
