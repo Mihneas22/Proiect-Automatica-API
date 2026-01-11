@@ -1,10 +1,13 @@
-﻿using Application.DTOs.Admin.GetProblems;
+﻿using Application.DTOs.Admin.CheckAdmin;
+using Application.DTOs.Admin.GetProblems;
 using Application.DTOs.Admin.GetUsers;
 using Application.Repository;
 using Infastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Infastructure.Repository
@@ -17,6 +20,40 @@ namespace Infastructure.Repository
         {
             dbContext = applicationDb;
         }
+
+        public async Task<CheckAdminResponse> CheckAdminRepository(CheckAdminDTO checkAdminDTO)
+        {
+            if (checkAdminDTO == null)
+                return new CheckAdminResponse(false, "Invalid data");
+
+            var handler = new JwtSecurityTokenHandler();
+
+            if (handler.CanReadToken(checkAdminDTO.Token))
+            {
+                var jwtToken = handler.ReadJwtToken(checkAdminDTO.Token);
+                var alg = jwtToken.Header.Alg;
+                var claims = jwtToken.Claims;
+                var name = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
+                var email = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
+                var role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
+                var expires = jwtToken.ValidTo;
+
+                if(expires > DateTime.Now)
+                {
+                    var admin = await dbContext.AdminEntity!.FirstOrDefaultAsync(ad => ad.Email == email && ad.Username == name);
+                    if (admin != null)
+                        return new CheckAdminResponse(true, "Admin found!");
+                    else
+                        return new CheckAdminResponse(false, "Admin not found");
+
+                }
+
+                return new CheckAdminResponse(false, "Tokenul expired");
+            }
+            else
+                return new CheckAdminResponse(false, "User not found");
+        }
+
         public async Task<GetProblemsResponse> GetProblemsDataAdmin()
         {
             var problems = await dbContext.ProblemEntity!

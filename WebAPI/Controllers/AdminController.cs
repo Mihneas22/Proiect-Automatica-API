@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Admin.AddAdmin;
 using Application.DTOs.Admin.AddAdminResponse;
+using Application.DTOs.Admin.CheckAdmin;
 using Application.DTOs.Admin.GetProblems;
 using Application.DTOs.Admin.GetUsers;
 using Application.DTOs.User.GetUser;
@@ -47,6 +48,13 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<GetUsersResponse>> GetUsersAdminAsync()
         {
             var result = await adminRepo.GetUsersDataAdmin();
+            return Ok(result);
+        }
+
+        [HttpPost("checkAdmin")]
+        public async Task<ActionResult<CheckAdminResponse>> CheckAdminAsync(CheckAdminDTO checkAdminDTO)
+        {
+            var result = await adminRepo.CheckAdminRepository(checkAdminDTO);
             return Ok(result);
         }
     }

@@ -1,12 +1,10 @@
 ﻿@WebAPI_HostAddress = http://localhost:5052
 
-GET {{WebAPI_HostAddress}}/api/admin/getUsers
+POST {{WebAPI_HostAddress}}/api/admin/checkAdmin
 Accept: application/json
 Content-Type: application/json
 {
-    "Username": "MihneaAdmin",
-    "Email": "mihnea.serban06@gmail.com",
-    "Password": "Agentm22"
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImQzZmQzM2YxLTljYjItNDJiZC04MTVhLTA4ZGU1MDhkM2Y1MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJNaWhuZWFBZG1pbiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im1paG5lYS5zZXJiYW4wNkBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImV4cCI6MTc3MDY3MTc4NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzE0OCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA1MiJ9.GXdnSGEaOSMhg0BFDg38zjdjsyyHATxjpIu3TwiAjlw"
 }
 
 
