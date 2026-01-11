@@ -2,6 +2,7 @@
 using Application.DTOs.User.LoginUser;
 using Application.DTOs.User.RegisterUser;
 using Application.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -35,6 +36,7 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "user,admin")]
         [HttpPost("getUser")]
         public async Task<ActionResult<GetUserResponse>> GetUserAsync(GetUserDTO getUserDTO)
         {

@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Problem.AddProblem;
+using Application.DTOs.Problem.DeleteProblem;
 using Application.DTOs.Problem.GetProblemById;
 using Application.DTOs.Problem.GetProblems;
 using Application.Repository;
@@ -51,6 +52,24 @@ namespace Infastructure.Repository
                 return new AddProblemResponse(true, "Sucess!");
             else
                 return new AddProblemResponse(false, "Problem was not added");
+        }
+
+        public async Task<DeleteProblemResponse> DeleteProblemRepository(DeleteProblemDTO deleteProblemDTO)
+        {
+            if (deleteProblemDTO == null)
+                return new DeleteProblemResponse(false, "Invalid data");
+
+            var pb = await dbContext.ProblemEntity!
+                .Include(pb => pb.ProblemSubmissions)
+                .FirstOrDefaultAsync(pb => pb.ProblemId == Guid.Parse(deleteProblemDTO.Id));
+            if (pb == null)
+                return new DeleteProblemResponse(false, "Problem not found");
+
+            dbContext.ProblemEntity!.Remove(pb);
+
+            await dbContext.SaveChangesAsync();
+
+            return new DeleteProblemResponse(true, "Success!");
         }
 
         public async Task<GetProblemByIdResponse> GetProblemRepository(GetProblemByIdDTO getProblemByIdDTO)

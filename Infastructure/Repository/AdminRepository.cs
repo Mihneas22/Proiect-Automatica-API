@@ -31,8 +31,6 @@ namespace Infastructure.Repository
             if (handler.CanReadToken(checkAdminDTO.Token))
             {
                 var jwtToken = handler.ReadJwtToken(checkAdminDTO.Token);
-                var alg = jwtToken.Header.Alg;
-                var claims = jwtToken.Claims;
                 var name = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
                 var email = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
                 var role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;

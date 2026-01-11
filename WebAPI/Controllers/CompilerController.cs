@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Compiler.AddSubmission;
 using Application.DTOs.Compiler.RunCode;
 using Application.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -19,6 +20,7 @@ namespace WebAPI.Controllers
         }
 
         [EnableRateLimiting("facult-policy")]
+        [Authorize(Roles = "user,admin")]
         [HttpPost("runCode")]
         public async Task<ActionResult<RunCResponse>> CompileAndRunCodeAsync(RunCDTO runCDTO)
         {
@@ -27,6 +29,7 @@ namespace WebAPI.Controllers
         }
 
         [EnableRateLimiting("facult-policy")]
+        [Authorize(Roles = "user,admin")]
         [HttpPost("addSubmission")]
         public async Task<ActionResult<RunCResponse>> AddSubmissionAsync(AddSubmissionDTO addSubmissionDTO)
         {
