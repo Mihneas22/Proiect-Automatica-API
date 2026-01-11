@@ -2,6 +2,7 @@
 using Application.DTOs.Compiler.RunCode;
 using Application.DTOs.Compiler.RunCompiler;
 using Application.Repository;
+using Domain.Entities;
 using Infastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -209,13 +210,22 @@ namespace Infastructure.Repository
 
         public async Task<RunCResponse> CompileAndRunCode(RunCDTO runCDTO)
         {
+            // LOG PENTRU DEBUG:
+            Console.WriteLine($"DEBUG: ProblemId primit: {runCDTO.ProblemId}");
+
             if (runCDTO == null)
                 return new RunCResponse(false, "Invalid data");
 
             var pb = await dbContext.ProblemEntity!.FirstOrDefaultAsync(pb => pb.ProblemId == runCDTO.ProblemId);
-            var user = await dbContext.UserEntity!.FirstOrDefaultAsync(us => us.Id == runCDTO.UserId);
-            if (pb == null || user == null)
-                return new RunCResponse(false, "Problem or user not found");
+            if (runCDTO.UserId != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                var user = await dbContext.UserEntity!.FirstOrDefaultAsync(us => us.Id == runCDTO.UserId);
+                if (pb == null || user == null)
+                    return new RunCResponse(false, "User not found");
+            }
+
+            if (pb == null)
+                return new RunCResponse(false, "Problem not found");
 
             int indx = 0;
             foreach (var input in pb.InputsJson!)

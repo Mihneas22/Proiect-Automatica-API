@@ -29,6 +29,6 @@ namespace Application.DTOs.Problem.AddProblem
         public List<string> InputsJson { get; set; } = new List<string>();
 
         [Required]
-        public List<string> OuputsJson { get; set; } = new List<string>();
+        public List<string> OutputsJson { get; set; } = new List<string>();
     }
 }

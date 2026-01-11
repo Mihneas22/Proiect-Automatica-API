@@ -39,7 +39,7 @@ namespace Infastructure.Repository
                 Requests = addProblemDTO.Requests,
                 Points = addProblemDTO.Points,
                 InputsJson = addProblemDTO.InputsJson,
-                OutputsJson = addProblemDTO.OuputsJson,
+                OutputsJson = addProblemDTO.OutputsJson,
                 AcceptanceRate = 0.0,
                 ProblemSubmissions = new List<Submission>(),
                 CreatedAt = DateTime.Now
